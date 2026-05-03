@@ -20,18 +20,23 @@ func StartServer() {
 	mux.HandleFunc("/logs", getAllLogsHandler)
 	mux.HandleFunc("/metrics", metricsHandler)
 	mux.HandleFunc("/compare", compareHandler)
-	
+
 	mux.Handle("/", http.FileServer(http.Dir("./web")))
 
 	handler := LoggingMiddleware(mux)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":" + port,
 		Handler: handler,
 	}
 
 	go func() {
-		fmt.Println("Server running on :8080")
+		fmt.Println("Server running on " + ":" + port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal(err)
 		}
