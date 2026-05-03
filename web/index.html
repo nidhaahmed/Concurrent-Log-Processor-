@@ -28,7 +28,7 @@
             const text = await file.text();
             const logs = text.split("\n").filter(line => line.trim() !== "");
 
-            const response = await fetch("http://localhost:8080/compare", {
+            const response = await fetch("compare", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
