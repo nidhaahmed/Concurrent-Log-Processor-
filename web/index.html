@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Log Processor UI</title>
+</head>
+
+<body>
+
+    <h2>Upload Log File</h2>
+
+    <input type="file" id="fileInput" />
+    <br><br>
+
+    <button onclick="processLogs()">Run Comparison</button>
+
+    <h3>Result</h3>
+    <pre id="output"></pre>
+
+    <script>
+        async function processLogs() {
+            const file = document.getElementById("fileInput").files[0];
+            if (!file) {
+                alert("Please select a file");
+                return;
+            }
+
+            const text = await file.text();
+            const logs = text.split("\n").filter(line => line.trim() !== "");
+
+            const response = await fetch("http://localhost:8080/compare", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ logs })
+            });
+
+            const data = await response.json();
+
+            const concurrent = data.concurrent.time_sec;
+            const sequential = data.sequential.time_sec;
+            const diff = data.analysis.faster_by_sec;
+            const percent = data.analysis.improvement_percent;
+
+            let verdict = `🔥 Concurrent is faster by ${diff.toFixed(4)} sec (${percent.toFixed(2)}%)`;
+
+            document.getElementById("output").textContent =
+                JSON.stringify(data, null, 2) + "\n\n" + verdict;
+        }
+    </script>
+
+</body>
+
+</html>
