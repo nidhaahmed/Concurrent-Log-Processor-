@@ -4,6 +4,12 @@ A high-performance log processing backend built in Go with concurrency, modular 
 
 ---
 
+## 🌐 Live Demo
+
+🔗 https://concurrent-log-processor.onrender.com/
+
+Upload a log file and compare sequential vs concurrent processing performance in real-time.
+
 ## 🚀 Features
 
 - 📂 Log ingestion via REST API
